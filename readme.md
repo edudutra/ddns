@@ -1,36 +1,42 @@
 # Cloudflare DDNS Updater
 
-Este projeto é um script Python para atualizar automaticamente um registro DNS do tipo A na Cloudflare com o IP público atual da máquina. Ele é útil para configurar um DNS dinâmico (DDNS) em domínios gerenciados pela Cloudflare.
+This project is a Python script to automatically update an A-type DNS record on Cloudflare with the machine's current public IP. It is useful for setting up dynamic DNS (DDNS) on domains managed by Cloudflare.
 
-## Como funciona
+## How it works
 
-1. Obtém o IP público atual da máquina usando serviços como `api.ipify.org` ou `ifconfig.me`.
-2. Consulta a API da Cloudflare para obter o ID da zona e do registro DNS.
-3. Compara o IP público atual com o IP registrado no DNS.
-4. Atualiza o registro DNS caso o IP tenha mudado.
+1. Retrieves the machine's current public IP using services like `api.ipify.org` or `ifconfig.me`.
+2. Queries the Cloudflare API to get the zone and DNS record IDs.
+3. Compares the current public IP with the IP registered in the DNS.
+4. Updates the DNS record if the IP has changed.
 
-## Configuração
+## Configuration
 
-1. Crie um arquivo `.env` na raiz do projeto com a seguinte variável:
+1. Create a `.env` file in the project's root directory with the following variables:
    ```env
-   CLOUDFLARE_API_TOKEN=seu_token_da_cloudflare
+   CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
+   ZONE_NAME=your_zone_name
+   RECORD_NAME=your_record_name
    ```
-2. Certifique-se de que o token da API tenha permissões para ler e atualizar registros DNS.
+2. Ensure the API token has permissions to read and update DNS records.
 
-## Dependências
+## Dependencies
 
-Instale as dependências do projeto com:
+Install the project's dependencies with:
 ```bash
 pip install -r requirements.txt
 ```
 
-## Uso
+## Usage
 
-Execute o script com:
+Run the script with:
 ```bash
 python cloudflare_ddns.py
 ```
 
-## Observação
+## Note
 
-Certifique-se de configurar corretamente as variáveis `ZONE_NAME` e `RECORD_NAME` no script para corresponderem ao seu domínio e subdomínio.
+Make sure to correctly configure the variables in the `.env` file to match your domain and subdomain.
+
+---
+
+[Leia em Português](readme_pt-br.md)
