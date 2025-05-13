@@ -1,6 +1,8 @@
 import os
 import requests
 from dotenv import load_dotenv
+import datetime
+import logging
 
 # Carrega variáveis do arquivo .env
 load_dotenv()
@@ -21,12 +23,24 @@ headers = {
     "Content-Type": "application/json"
 }
 
+# Configuração do logger
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("logs/logs.txt", encoding="utf-8")
+    ]
+)
+logger = logging.getLogger(__name__)
+
 # Função para pegar o IP público com a opção verify=False
 def get_public_ip():
     try:
         return requests.get("https://api.ipify.org", timeout=5).text.strip()
     except requests.exceptions.RequestException:
-        print("[❌] Erro ao obter o IP público com api.ipify.org. Tentando alternativa...")
+        logger.error("Erro ao obter o IP público com api.ipify.org. Tentando alternativa...")
         return requests.get("https://ifconfig.me/ip", timeout=5).text.strip()
 
 def get_zone_id():
@@ -58,20 +72,20 @@ def update_dns_record(zone_id, record_id, ip):
 
 def main():
     ip = get_public_ip()
-    print(f"[INFO] IP atual: {ip}")
+    logger.info(f"IP atual: {ip}")
 
     zone_id = get_zone_id()
     record_id, current_ip = get_record_id(zone_id)
 
     if ip != current_ip:
-        print(f"[INFO] IP mudou (antes: {current_ip}) — atualizando...")
+        logger.info(f"IP mudou (antes: {current_ip}) — atualizando...")
         success = update_dns_record(zone_id, record_id, ip)
         if success:
-            print("[✅] Registro atualizado com sucesso!")
+            logger.info("Registro atualizado com sucesso!")
         else:
-            print("[❌] Falha ao atualizar o registro.")
+            logger.error("Falha ao atualizar o registro.")
     else:
-        print("[✔] IP não mudou. Nada a fazer.")
+        logger.info("IP não mudou. Nada a fazer.")
 
 if __name__ == "__main__":
     main()
